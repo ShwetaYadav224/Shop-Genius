@@ -1,14 +1,16 @@
-import React from 'react'
-import './App.css'
-import { Button } from "@material-tailwind/react";
+import './App.css';
+import { Outlet } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
-
   return (
-    <>
-      <Button>Hello world!</Button>
-    </>
-  )
+   <> 
+      <Toaster/>
+       <main >
+        <Outlet/>
+       </main>
+   </>
+  );  
 }
 
-export default App
+export default App;
