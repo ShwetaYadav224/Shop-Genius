@@ -5,7 +5,19 @@ import uploadFile from '../helpers/uploadFile';
 import axios from 'axios'
 import toast from 'react-hot-toast';
 
+import { 
+  Button,
+  Typography,
+  Input
+ } from "@material-tailwind/react";
+
 const RegisterPage = () => {
+  const [ isRegisterOpen, setRegisterOpen ] = useState(true);
+  const [ isFullNameOpen, setFullNameOpen ] = useState(false);
+  const [ isEmailOpen, setEmailOpen ] = useState(false);
+  const [ isPhoneOpen, setPhoneOpen ] = useState(false);
+  const [ isPasswordOpen, setPasswordOpen ] = useState(false);
+  
   const [data,setData] = useState({
     name : "",
     email : "",
@@ -75,95 +87,209 @@ const RegisterPage = () => {
     console.log('data',data)
   }
 
+  const googlelogin = () => {
+
+  }
+
+  const switchpage = () => {
+    navigate("/email")
+  }
+
+  const moveNext = () => {
+      if(isRegisterOpen) {
+          setFullNameOpen(!isFullNameOpen);
+          setRegisterOpen(!isRegisterOpen);
+      }
+      else if(isFullNameOpen) {
+          setFullNameOpen(!isFullNameOpen);
+          setEmailOpen(!isEmailOpen);
+      }
+      else if(isEmailOpen) {
+          setEmailOpen(!isEmailOpen);
+          setPhoneOpen(!isPhoneOpen);
+      }
+      else if(isPhoneOpen) {
+          setPhoneOpen(!isPhoneOpen);
+          setPasswordOpen(!isPasswordOpen);
+      }
+  };
+
+  const moveBack = () => {
+      if(isPasswordOpen) {
+          setPasswordOpen(!isPasswordOpen);
+          setPhoneOpen(!isPhoneOpen);
+      }
+      else if(isPhoneOpen) {
+          setPhoneOpen(!isPhoneOpen);
+          setEmailOpen(!isEmailOpen);
+      }
+      else if(isEmailOpen) {
+          setEmailOpen(!isEmailOpen);
+          setFullNameOpen(!isFullNameOpen);
+      }
+      else if(isFullNameOpen) {
+        setFullNameOpen(!isFullNameOpen);
+        setRegisterOpen(!isRegisterOpen);
+    }
+  };
 
   return (
     <div className='mt-5'>
         <div className='bg-white w-full max-w-md  rounded overflow-hidden p-4 mx-auto'>
-          <h3>Welcome to Chat app!</h3>
 
-          <form className='grid gap-4 mt-5' onSubmit={handleSubmit}>
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='name'>Name :</label>
-                <input
-                  type='text'
-                  id='name'
-                  name='name'
-                  placeholder='enter your name' 
-                  className='bg-slate-100 px-2 py-1 focus:outline-primary'
-                  value={data.name}
-                  onChange={handleOnChange}
-                  required
-                />
-              </div>
+            {
+              isRegisterOpen && (
+                <div>
+                  <Button 
+                    onClick={moveNext}
+                  >Create An Account</Button>
+                  <Button onClick={googlelogin}>Sign Up With Google</Button>
+                  <Typography variant='small' className='mt-4 flex justify-center'>
+                    <p>Already have an account?</p>
+                    <Typography variant='small' className='ml-1 font-bold cursor-pointer' onClick={switchpage}>Log In</Typography>
+                  </Typography>
+                </div>
+              )
+            }
 
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='email'>Email :</label>
-                <input
-                  type='email'
-                  id='email'
-                  name='email'
-                  placeholder='enter your email' 
-                  className='bg-slate-100 px-2 py-1 focus:outline-primary'
-                  value={data.email}
-                  onChange={handleOnChange}
-                  required
-                />
-              </div>
-
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='password'>Password :</label>
-                <input
-                  type='password'
-                  id='password'
-                  name='password'
-                  placeholder='enter your password' 
-                  className='bg-slate-100 px-2 py-1 focus:outline-primary'
-                  value={data.password}
-                  onChange={handleOnChange}
-                  required
-                />
-              </div>
-
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='profile_pic'>Photo :
-
-                  <div className='h-14 bg-slate-200 flex justify-center items-center border rounded hover:border-primary cursor-pointer'>
-                      <p className='text-sm max-w-[300px] text-ellipsis line-clamp-1'>
-                        {
-                          uploadPhoto?.name ? uploadPhoto?.name : "Upload profile photo"
-                        }
-                      </p>
-                      {
-                        uploadPhoto?.name && (
-                          <button className='text-lg ml-2 hover:text-red-600' onClick={handleClearUploadPhoto}>
-                            <IoClose/>
-                          </button>
-                        )
-                      }
-                      
+            {
+              isFullNameOpen && (
+                  <div>
+                    <Input 
+                      type='text'
+                      id='name'
+                      name='name'
+                      size='lg'
+                      label="Full "
+                      value={data.name}
+                      onChange={handleOnChange}
+                      required
+                    />
+                    <div>
+                      <Button
+                        size='lg'
+                        variant='outlined'
+                        onClick={moveBack}
+                      >
+                        Back
+                      </Button>
+                      <Button 
+                        size='lg'
+                        onClick={moveNext}
+                      >
+                        Continue
+                      </Button>
+                    </div>
                   </div>
-                
-                </label>
-                
-                <input
-                  type='file'
-                  id='profile_pic'
-                  name='profile_pic'
-                  className='bg-slate-100 px-2 py-1 focus:outline-primary hidden'
-                  onChange={handleUploadPhoto}
-                />
-              </div>
+              )
+            }
 
+            {
+              isEmailOpen && (
+                  <div>
+                    <Input 
+                      type='email'
+                      id='email'
+                      name='email'
+                      size='lg'
+                      label="Email"
+                      value={data.email}
+                      onChange={handleOnChange}
+                      required
+                    />
+                    <div>
+                      <Button
+                        size='lg'
+                        variant='outlined'
+                        onClick={moveBack}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size='lg'
+                        onClick={moveNext} 
+                      >
+                        Continue
+                      </Button>
+                    </div>
+                  </div>
+              )
+            }
 
-              <button
-               className='bg-primary text-lg  px-4 py-1 hover:bg-secondary rounded mt-2 font-bold text-white leading-relaxed tracking-wide'
-              >
-                Register
-              </button>
+            { 
+              isPhoneOpen && (
+                  <div>
+                    <Input 
+                      type='phone'
+                      id='phone'
+                      name='phone'
+                      size='lg'
+                      label="Phone"
+                      value={data.phone}
+                      onChange={handleOnChange}
+                      required
+                    />
+                    <div>
+                      <Button
+                        size='lg'
+                        variant='outlined'
+                        onClick={moveBack}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        size='lg'
+                        onClick={moveNext} 
+                      >
+                        Continue
+                      </Button>
+                    </div>
+                  </div>
+              )
+            }
 
-          </form>
-
-          <p className='my-3 text-center'>Already have account ? <Link to={"/email"} className='hover:text-primary font-semibold'>Login</Link></p>
+            {
+              isPasswordOpen && (
+                  <div>
+                      <Input 
+                        type='password'
+                        id='password'
+                        name='createdspassword'
+                        size='lg'
+                        label="Create Password"
+                        value={data.createdpassword}
+                        onChange={handleOnChange}
+                        required
+                      />
+                      
+                      <Input 
+                        type='password'
+                        id='password'
+                        name='password'
+                        size='lg'
+                        label="Confirm Password"
+                        value={data.password}
+                        onChange={handleOnChange}
+                        required
+                      />
+                      <div>
+                        <Button
+                          size='lg'
+                          variant='outlined'
+                          onClick={moveBack}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          size='lg'
+                          onClick={handleSubmit}
+                        >
+                          Sign Up
+                        </Button>
+                      </div>
+                  </div>
+              )
+            }
         </div>
     </div>
   )

@@ -83,7 +83,6 @@ const CheckEmailPage = () => {
             </div>
 
         <Input 
-
         type='email'
         id='email'
         name='email'
