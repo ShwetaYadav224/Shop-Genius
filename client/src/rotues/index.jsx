@@ -8,6 +8,7 @@ import MessagePage from "../components/MessagePage";
 import AuthLayouts from "../layout";
 import Forgotpassword from "../pages/Forgotpassword";
 import Main from "../pages/Main";
+import NavBar from "../pages/NavBar";
 
 const router = createBrowserRouter([
 {
@@ -19,8 +20,8 @@ const router = createBrowserRouter([
             element: <Main />,
             children : [
                 {
-                    path : "/",
-                    element : <Navbar/>
+                    path : "",
+                    element : <NavBar/>
                 }
             ]
         },
