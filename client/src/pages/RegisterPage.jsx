@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 import uploadFile from '../helpers/uploadFile';
 import axios from 'axios'
 import toast from 'react-hot-toast';
@@ -87,9 +88,43 @@ const RegisterPage = () => {
     console.log('data',data)
   }
 
-  const googlelogin = () => {
+  const server_api = import.meta.env.VITE_SERVER_API;
+  const responseGoogle = async (authResult) => {
+        try {
+            if (authResult.code) {
+                
+                const result = await googleAuth(authResult.code); 
+                const { userCredentialsResult } = result.data;
+                localStorage.setItem('userCredentials', JSON.stringify(userCredentialsResult));
+                handleSuccess('Welcome To Trip Genius!');
+                setTimeout(() => {
+                    navigate('/dashboard/*')
+                }, 2000)
 
-  }
+            }
+        } catch (err) {
+            console.error('Error while requesting Google code', err);
+        }
+    };
+
+    const googleAuth = async (code) => {
+      try {
+        const url = `${server_api}/api/google`;
+        const response = await axios.get(url, { params: { code } }); 
+        return response;
+      } catch (error) {
+        console.error('Error during server-side Google authentication', error);
+        throw error;
+      }
+    };
+
+
+
+    const googlelogin = useGoogleLogin({
+      onSuccess: responseGoogle,
+      onError: responseGoogle,
+      flow: 'auth-code',
+    });
 
   const switchpage = () => {
     navigate("/email")
@@ -160,7 +195,7 @@ const RegisterPage = () => {
                       id='name'
                       name='name'
                       size='lg'
-                      label="Full "
+                      label="Full Name"
                       value={data.name}
                       onChange={handleOnChange}
                       required

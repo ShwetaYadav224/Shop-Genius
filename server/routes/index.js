@@ -6,6 +6,7 @@ const userDetails = require('../controller/userDetails')
 const logout = require('../controller/logout')
 const updateUserDetails = require('../controller/updateUserDetails')
 const searchUser = require('../controller/searchUser')
+const googleLogin = require('../controller/googleLogin')
 
 
 const router = express.Router()
@@ -14,6 +15,8 @@ const router = express.Router()
 router.post('/register',registerUser)
 //check user email
 router.post('/email',checkEmail)
+//auth using google
+router.get('/google', googleLogin)
 //check user password
 router.post('/password',checkPassword)
 //login user details

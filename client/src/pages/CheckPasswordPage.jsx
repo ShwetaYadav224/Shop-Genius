@@ -5,6 +5,7 @@ import uploadFile from '../helpers/uploadFile';
 import axios from 'axios'
 import toast from 'react-hot-toast';
 import { PiUserCircle } from "react-icons/pi";
+import { useGoogleLogin } from '@react-oauth/google';
 import Avatar from '../components/Avatar';
 import { useDispatch } from 'react-redux';
 import { setToken, setUser } from '../redux/userSlice';
@@ -73,9 +74,42 @@ const CheckPasswordPage = () => {
     }
   }
 
-  const googlelogin = () => {
+  const server_api = import.meta.env.VITE_SERVER_API;
+  const responseGoogle = async (authResult) => {
+        try {
+            if (authResult.code) {
+                const result = await googleAuth(authResult.code); 
+                const { userCredentialsResult } = result.data;
+                localStorage.setItem('userCredentials', JSON.stringify(userCredentialsResult));
+                setTimeout(() => {
+                    const message = "Welcome To Trip Genius!" 
+                    handleSuccess(message);
+                    navigate('/')
+                }, 1000)
+            }
+        } catch (err) {
+            console.error('Error while requesting Google code', err);
+        }
+    };
 
-  }
+    const googleAuth = async (code) => {
+      try {
+        const url = `${server_api}/api/google`
+        const response = await axios.get(url, { params: { code } }); 
+        return response;
+      } catch (error) {
+        console.error('Error during server-side Google authentication', error);
+        throw error;
+      }
+    };
+
+
+
+    const googlelogin = useGoogleLogin({
+      onSuccess: responseGoogle,
+      onError: responseGoogle,
+      flow: 'auth-code',
+    });
 
   const switchpage = () => {
     navigate("/register")
@@ -127,7 +161,7 @@ const CheckPasswordPage = () => {
             
             <Typography variant='small' className='mt-4 flex justify-center'>
               <p>Already have an account?</p>
-              <Typography variant='small' className='ml-1 font-bold cursor-pointer' onClick={switchpage}>Log In</Typography>
+              <Typography variant='small' className='ml-1 font-bold cursor-pointer' onClick={switchpage}>Sign Up</Typography>
             </Typography>
             
         </div>
