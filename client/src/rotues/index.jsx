@@ -7,12 +7,23 @@ import Home from "../pages/Home";
 import MessagePage from "../components/MessagePage";
 import AuthLayouts from "../layout";
 import Forgotpassword from "../pages/Forgotpassword";
+import Main from "../pages/Main";
 
 const router = createBrowserRouter([
 {
     path : "/",
     element : <App/>,
     children : [
+        {
+            path: "/",
+            element: <Main />,
+            children : [
+                {
+                    path : "/",
+                    element : <Navbar/>
+                }
+            ]
+        },
         {
             path : "register",
             element : <AuthLayouts><RegisterPage/></AuthLayouts>
@@ -30,7 +41,7 @@ const router = createBrowserRouter([
             element : <AuthLayouts><Forgotpassword/></AuthLayouts>
         },
         {
-            path : "",
+            path : "/home",
             element : <Home/>,
             children : [
                 {
